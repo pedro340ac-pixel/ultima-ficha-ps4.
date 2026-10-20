@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Última Ficha</title>
+<style>
+:root{--bg:#151922;--panel:#222936;--panel2:#303a49;--gold:#ffd166;--green:#73e0a1;--red:#ff7474;--text:#f4f6fb}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#354253,#151922 65%);color:var(--text);font-family:system-ui,Arial,sans-serif;min-height:100vh}
+main{max-width:980px;margin:auto;padding:16px}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+h1{font-size:clamp(24px,5vw,38px);margin:0;letter-spacing:1px}h1 span{color:var(--gold)}.sub{color:#bac5d4;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stat,.panel{background:linear-gradient(145deg,#293241,#202631);border:1px solid #465365;border-radius:14px;box-shadow:0 8px 22px #0003}
+.stat{padding:10px;text-align:center}.stat small{display:block;color:#b8c3d3;font-size:12px}.stat strong{font-size:clamp(18px,3.5vw,25px)}
+.layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(230px,.8fr);gap:12px}
+.panel{padding:14px}.panel h2{font-size:18px;margin:0 0 10px}
+.machine{background:linear-gradient(#111720,#202a36);border:3px solid #68788a;border-radius:18px;padding:14px;box-shadow:inset 0 0 0 3px #0d1118,0 10px 28px #0005}
+.machine-top{display:flex;justify-content:space-between;align-items:center;color:var(--gold);font-weight:800;margin:0 4px 12px}
+.reels{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.reel{height:clamp(92px,18vw,140px);display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#dce4ee);border:4px solid #7d8b9b;border-radius:12px;color:#18202a;font-size:clamp(42px,9vw,72px);text-shadow:0 2px #fff;box-shadow:inset 0 4px 10px #0002;overflow:hidden}
+.reel.spinning{animation:pulse .12s linear infinite alternate}
+@keyframes pulse{from{filter:blur(0)}to{filter:blur(2px);transform:translateY(2px)}}
+.payline{height:5px;border-radius:10px;background:#ff6c6c;margin:9px 0;box-shadow:0 0 10px #ff6c6c66}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+button{border:0;border-radius:11px;padding:12px 10px;font:700 15px system-ui;cursor:pointer;color:#18202a;background:#dbe3ed;box-shadow:0 3px 0 #8996a6;touch-action:manipulation}
+button:active{transform:translateY(2px);box-shadow:0 1px 0 #8996a6}button:disabled{opacity:.45;cursor:not-allowed}
+.primary{background:var(--gold);box-shadow:0 3px 0 #b17c23}.green{background:var(--green);box-shadow:0 3px 0 #328a56}.muted{background:#b7c4d5}
+.message{min-height:48px;margin-top:12px;background:#141a23;border:1px solid #3b4656;border-radius:10px;padding:10px;color:#dce5f0;font-size:14px}
+.shop-list{display:grid;gap:8px}.item{padding:10px;border-radius:10px;background:#171e28;border:1px solid #3a4656;display:flex;align-items:center;justify-content:space-between;gap:8px}.item b{display:block}.item small{color:#b9c4d2;display:block;font-size:12px}.item button{padding:9px;font-size:13px;white-space:nowrap}
+.help{color:#bdc8d7;font-size:13px;line-height:1.5;margin-top:10px}
+footer{text-align:center;color:#94a3b8;font-size:12px;margin:15px 0}
+@media(max-width:700px){main{padding:10px}.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.panel{padding:11px}.machine{padding:10px}}
+</style></head>
+<body><main>
+<header><div><h1>ÚLTIMA <span>FICHA</span></h1><div class="sub">Sorte, estratégia e uma máquina cheia de surpresas.</div></div><button class="muted" id="restart">Recomeçar</button></header>
+<section class="stats">
+<div class="stat"><small>MOEDAS</small><strong id="coins">25</strong></div><div class="stat"><small>DÍVIDA</small><strong id="debt">40</strong></div><div class="stat"><small>RODADA</small><strong id="round">1/10</strong></div><div class="stat"><small>APOSTA</small><strong id="betStat">5</strong></div>
+</section>
+<div class="layout">
+<section class="panel">
+<div class="machine">
+<div class="machine-top"><span>★ MÁQUINA DE PRÊMIOS ★</span><span id="multiplier">x1</span></div>
+<div class="reels"><div class="reel" id="r0">🍒</div><div class="reel" id="r1">🍋</div><div class="reel" id="r2">🔔</div></div><div class="payline"></div>
+<div class="controls"><button id="betDown">− APOSTA</button><button id="betUp">+ APOSTA</button><button class="primary" id="spin" style="grid-column:1/-1">GIRAR — 5 MOEDAS</button></div>
+</div>
+<div class="message" id="message" aria-live="polite">Faça sua primeira jogada. Combine símbolos para ganhar moedas!</div>
+<div class="help">Combinações: 3 iguais = grande prêmio · 2 iguais = prêmio pequeno · 7️⃣ vale mais. Pague a dívida antes do fim da rodada 10.</div>
+</section>
+<aside class="panel"><h2>🛒 Loja de melhorias</h2><div class="shop-list" id="shop"></div><div class="help">Compre melhorias entre os giros. Elas ficam ativas durante esta partida.</div></aside>
+</div><footer>Jogo original inspirado em máquinas de sorte. Não usa dinheiro real.</footer></main>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const symbols=['🍒','🍋','🍊','🍇','🔔','💎','7️⃣'];
+const values={'🍒':2,'🍋':2,'🍊':3,'🍇':3,'🔔':5,'💎':8,'7️⃣':12};
+let coins=25,debt=40,round=1,bet=5,mult=1,bonus=0,discount=0,spins=0,ended=false,busy=false;
+const upgrades=[
+{id:'lucky',name:'Trevo da sorte',desc:'+1 multiplicador de prêmio',price:18,run:()=>mult++},
+{id:'coupon',name:'Cupom de aposta',desc:'Apostas custam 1 moeda a menos',price:15,run:()=>discount=Math.min(3,discount+1)},
+{id:'bonus',name:'Bolsa extra',desc:'Receba 10 moedas imediatamente',price:12,run:()=>coins+=10},
+{id:'glasses',name:'Lentes especiais',desc:'Aumenta um pouco a chance de 7️⃣',price:22,run:()=>bonus+=0.08}
+];
+function cost(){return Math.max(1,bet-discount)}
+function update(){
+$('coins').textContent=coins;$('debt').textContent=debt;$('round').textContent=Math.min(round,10)+'/10';$('betStat').textContent=bet;$('multiplier').textContent='x'+mult;
+$('spin').textContent='GIRAR — '+cost()+' MOEDAS';$('spin').disabled=busy||ended||coins<cost();
+$('betDown').disabled=busy||ended||bet<=1;$('betUp').disabled=busy||ended||bet>=Math.max(1,coins);
+renderShop();
+}
+function renderShop(){
+$('shop').innerHTML='';
+upgrades.forEach(u=>{let row=document.createElement('div');row.className='item';let txt=document.createElement('div');txt.innerHTML='<b>'+u.name+'</b><small>'+u.desc+'</small>';let btn=document.createElement('button');btn.textContent=u.price+' 🪙';btn.disabled=ended||busy||coins<u.price;btn.onclick=()=>{if(coins<u.price||ended)return;coins-=u.price;u.run();$('message').textContent='Comprado: '+u.name+'!';update()};row.append(txt,btn);$('shop').append(row)});
+}
+function pick(){let pool=symbols.slice();if(Math.random()<bonus)pool.push('7️⃣','7️⃣');return pool[Math.floor(Math.random()*pool.length)]}
+function showMsg(t){$('message').textContent=t}
+function finish(won){ended=true;busy=false;$('spin').disabled=true;showMsg(won?'🎉 Você pagou toda a dívida! Vitória! Toque em Recomeçar para jogar de novo.':'A dívida venceu o prazo. Fim de jogo! Toque em Recomeçar para tentar novamente.');update()}
+function spin(){
+if(busy||ended||coins<cost())return;
+busy=true;coins-=cost();spins++;update();const els=[0,1,2].map(i=>$('r'+i));els.forEach(e=>e.classList.add('spinning'));
+let result=[pick(),pick(),pick()];let ticks=0;
+const timer=setInterval(()=>{els.forEach((e,i)=>e.textContent=pick());ticks++;if(ticks>=10){clearInterval(timer);els.forEach((e,i)=>{e.textContent=result[i];e.classList.remove('spinning')});settle(result)}},70);
+}
+function settle(a){
+busy=false;let payout=0,msg='';
+if(a[0]===a[1]&&a[1]===a[2]){payout=bet*values[a[0]]*mult;msg='TRINCA! '+a.join(' ')+' — ganhou '+payout+' moedas!';}
+else if(a[0]===a[1]||a[1]===a[2]||a[0]===a[2]){payout=Math.max(2,Math.floor(bet*1.2*mult));msg='Par! '+a.join(' ')+' — ganhou '+payout+' moedas.';}
+else {msg=a.join(' ')+' — não foi dessa vez.'}
+coins+=payout;
+if(spins%3===0&&!ended){let event=Math.random();if(event<.25){let gift=5+Math.floor(Math.random()*6);coins+=gift;msg+=' Evento: achou '+gift+' moedas extras!'}else if(event<.4){let reduction=Math.min(debt,8);debt-=reduction;msg+=' Evento: desconto de dívida de '+reduction+'!'}}
+round++;
+if(debt<=0){debt=0;update();finish(true);return}
+if(round>10){update();finish(false);return}
+showMsg(msg);update();
+}
+$('spin').onclick=spin;$('betDown').onclick=()=>{bet=Math.max(1,bet-1);update()};$('betUp').onclick=()=>{bet=Math.min(Math.max(1,coins),bet+1);update()};
+$('restart').onclick=()=>{coins=25;debt=40;round=1;bet=5;mult=1;bonus=0;discount=0;spins=0;ended=false;busy=false;['🍒','🍋','🔔'].forEach((s,i)=>$('r'+i).textContent=s);showMsg('Partida nova! Faça sua primeira jogada.');update()};
+document.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();spin()}});
+update();
+})();
+</script></body></html>
